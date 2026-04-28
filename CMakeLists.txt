@@ -9,6 +9,7 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets Network)
 add_executable(sensorhub-monitor
     src/main.cpp
     src/mainwindow.cpp
+    src/readings_table.cpp
 )
 
 target_include_directories(sensorhub-monitor PRIVATE src)
