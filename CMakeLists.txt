@@ -10,6 +10,7 @@ add_executable(sensorhub-monitor
     src/main.cpp
     src/mainwindow.cpp
     src/readings_table.cpp
+    src/settings_dialog.cpp
 )
 
 target_include_directories(sensorhub-monitor PRIVATE src)
