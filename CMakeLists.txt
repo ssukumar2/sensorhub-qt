@@ -14,9 +14,12 @@ add_executable(sensorhub-monitor
     src/about_dialog.cpp
     src/status_bar.cpp
     src/log_viewer.cpp
+    src/chart_widget.cpp
     src/status_bar.cpp
     src/log_viewer.cpp
+    src/chart_widget.cpp
     src/log_viewer.cpp
+    src/chart_widget.cpp
     src/sensor_detail.cpp
 )
 
