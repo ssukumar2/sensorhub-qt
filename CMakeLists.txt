@@ -21,6 +21,21 @@ add_executable(sensorhub-monitor
     src/log_viewer.cpp
     src/chart_widget.cpp
     src/sensor_detail.cpp
+
+    src/http_client.cpp
+    inc/http_client.h
+    src/sensor_health.cpp
+    inc/sensor_health.h
+    src/notification_banner.cpp
+    inc/notification_banner.h
+    src/health_dock.cpp
+    inc/health_dock.h
+    src/theme_manager.cpp
+    inc/theme_manager.h
+    src/keyboard_shortcuts.cpp
+    inc/keyboard_shortcuts.h
+    src/shortcuts_dialog.cpp
+    inc/shortcuts_dialog.h
 )
 
 target_include_directories(sensorhub-monitor PRIVATE src)
