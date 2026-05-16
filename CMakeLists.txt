@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(sensorhub-qt VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets Network)
@@ -15,28 +16,36 @@ add_executable(sensorhub-monitor
     src/status_bar.cpp
     src/log_viewer.cpp
     src/chart_widget.cpp
-    src/status_bar.cpp
-    src/log_viewer.cpp
-    src/chart_widget.cpp
-    src/log_viewer.cpp
-    src/chart_widget.cpp
     src/sensor_detail.cpp
-
     src/http_client.cpp
-    inc/http_client.h
     src/sensor_health.cpp
-    inc/sensor_health.h
     src/notification_banner.cpp
-    inc/notification_banner.h
     src/health_dock.cpp
-    inc/health_dock.h
     src/theme_manager.cpp
-    inc/theme_manager.h
     src/keyboard_shortcuts.cpp
-    inc/keyboard_shortcuts.h
     src/shortcuts_dialog.cpp
+    inc/http_client.h
+    inc/sensor_health.h
+    inc/notification_banner.h
+    inc/health_dock.h
+    inc/theme_manager.h
+    inc/keyboard_shortcuts.h
     inc/shortcuts_dialog.h
+    inc/mainwindow.h
+    inc/readings_table.h
+    inc/settings_dialog.h
+    inc/about_dialog.h
+    inc/status_bar.h
+    inc/log_viewer.h
+    inc/chart_widget.h
+    inc/sensor_detail.h
 )
 
-target_include_directories(sensorhub-monitor PRIVATE src)
-target_link_libraries(sensorhub-monitor Qt5::Widgets Qt5::Network)
+target_include_directories(sensorhub-monitor PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/inc
+)
+
+target_link_libraries(sensorhub-monitor PRIVATE
+    Qt5::Widgets
+    Qt5::Network
+)
