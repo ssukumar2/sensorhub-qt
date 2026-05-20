@@ -51,3 +51,22 @@ target_link_libraries(sensorhub-monitor PRIVATE
     Qt5::Widgets
     Qt5::Network
 )
+
+
+# ---------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------
+find_package(Qt5 OPTIONAL_COMPONENTS Test)
+if (Qt5Test_FOUND)
+    enable_testing()
+    add_executable(test_health_monitor
+        tests/test_health_monitor.cpp
+        src/sensor_health.cpp
+        inc/sensor_health.h
+    )
+    target_include_directories(test_health_monitor PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+    target_link_libraries(test_health_monitor PRIVATE
+        Qt5::Core Qt5::Test)
+    add_test(NAME health_monitor COMMAND test_health_monitor)
+endif()
