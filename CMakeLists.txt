@@ -17,19 +17,25 @@ add_executable(sensorhub-monitor
     src/log_viewer.cpp
     src/chart_widget.cpp
     src/sensor_detail.cpp
+    src/app_context.cpp
     src/http_client.cpp
     src/sensor_health.cpp
     src/notification_banner.cpp
     src/health_dock.cpp
     src/theme_manager.cpp
     src/keyboard_shortcuts.cpp
+    src/sensor_filter.cpp
+    src/uptime_formatter.cpp
     src/shortcuts_dialog.cpp
+    inc/app_context.h
     inc/http_client.h
     inc/sensor_health.h
     inc/notification_banner.h
     inc/health_dock.h
     inc/theme_manager.h
     inc/keyboard_shortcuts.h
+    inc/sensor_filter.h
+    inc/uptime_formatter.h
     inc/shortcuts_dialog.h
     inc/mainwindow.h
     inc/readings_table.h
@@ -49,3 +55,22 @@ target_link_libraries(sensorhub-monitor PRIVATE
     Qt5::Widgets
     Qt5::Network
 )
+
+
+# ---------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------
+find_package(Qt5 OPTIONAL_COMPONENTS Test)
+if (Qt5Test_FOUND)
+    enable_testing()
+    add_executable(test_health_monitor
+        tests/test_health_monitor.cpp
+        src/sensor_health.cpp
+        inc/sensor_health.h
+    )
+    target_include_directories(test_health_monitor PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+    target_link_libraries(test_health_monitor PRIVATE
+        Qt5::Core Qt5::Test)
+    add_test(NAME health_monitor COMMAND test_health_monitor)
+endif()
