@@ -45,4 +45,5 @@ private slots:
 
 private:
     void installViewMenuEntries();
+    void installHelpMenuEntries();
 };

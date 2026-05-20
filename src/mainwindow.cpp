@@ -116,6 +116,7 @@ void MainWindow::setAppContext(sensorhub::AppContext *ctx) {
                           QKeySequence(QStringLiteral("Ctrl+T")));
         connect(m_shortcuts, &sensorhub::KeyboardShortcuts::triggered,
                 this, &MainWindow::onShortcutTriggered);
+        installHelpMenuEntries();
     }
 
     // HealthMonitor signal hook-ups for the banner
@@ -173,4 +174,23 @@ void MainWindow::installViewMenuEntries() {
         viewMenu = menuBar()->addMenu(tr("&View"));
     }
     viewMenu->addAction(m_healthDock->toggleViewAction());
+}
+
+
+void MainWindow::installHelpMenuEntries() {
+    if (!menuBar() || !m_shortcuts) return;
+    QMenu *helpMenu = nullptr;
+    for (QAction *a : menuBar()->actions()) {
+        if (a->menu() && a->text().contains(tr("Help"), Qt::CaseInsensitive)) {
+            helpMenu = a->menu();
+            break;
+        }
+    }
+    if (!helpMenu) helpMenu = menuBar()->addMenu(tr("&Help"));
+    QAction *act = helpMenu->addAction(tr("Keyboard shortcuts..."));
+    act->setShortcut(QKeySequence(QStringLiteral("F1")));
+    connect(act, &QAction::triggered, this, [this]() {
+        sensorhub::ShortcutsDialog dlg(m_shortcuts, this);
+        dlg.exec();
+    });
 }
