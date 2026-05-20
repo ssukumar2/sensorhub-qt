@@ -1,5 +1,6 @@
 #include "health_dock.h"
 #include "sensor_health.h"
+#include "uptime_formatter.h"
 
 #include <QTableWidget>
 #include <QHeaderView>
