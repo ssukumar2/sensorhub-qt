@@ -96,6 +96,7 @@ void MainWindow::setAppContext(sensorhub::AppContext *ctx) {
         m_healthDock = new sensorhub::HealthDock(m_appCtx->health(), this);
         addDockWidget(Qt::RightDockWidgetArea, m_healthDock);
         m_healthDock->hide();
+        installViewMenuEntries();
     }
 
     // Keyboard shortcuts
@@ -156,4 +157,20 @@ void MainWindow::onSensorRecovered(const QString &id, const QString &name) {
         m_banner->post(tr("Sensor %1 (%2) recovered").arg(name, id),
                        sensorhub::NotificationBanner::Info);
     }
+}
+
+
+void MainWindow::installViewMenuEntries() {
+    if (!m_healthDock || !menuBar()) return;
+    QMenu *viewMenu = nullptr;
+    for (QAction *a : menuBar()->actions()) {
+        if (a->menu() && a->text().contains(tr("View"), Qt::CaseInsensitive)) {
+            viewMenu = a->menu();
+            break;
+        }
+    }
+    if (!viewMenu) {
+        viewMenu = menuBar()->addMenu(tr("&View"));
+    }
+    viewMenu->addAction(m_healthDock->toggleViewAction());
 }

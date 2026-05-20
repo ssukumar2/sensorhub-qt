@@ -42,4 +42,7 @@ private slots:
     void onShortcutTriggered(const QString &id);
     void onSensorWentStale(const QString &id, const QString &name);
     void onSensorRecovered(const QString &id, const QString &name);
+
+private:
+    void installViewMenuEntries();
 };
