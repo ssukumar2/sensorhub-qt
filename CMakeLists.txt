@@ -24,6 +24,8 @@ add_executable(sensorhub-monitor
     src/health_dock.cpp
     src/theme_manager.cpp
     src/keyboard_shortcuts.cpp
+    src/sensor_filter.cpp
+    src/uptime_formatter.cpp
     src/shortcuts_dialog.cpp
     inc/app_context.h
     inc/http_client.h
@@ -32,6 +34,8 @@ add_executable(sensorhub-monitor
     inc/health_dock.h
     inc/theme_manager.h
     inc/keyboard_shortcuts.h
+    inc/sensor_filter.h
+    inc/uptime_formatter.h
     inc/shortcuts_dialog.h
     inc/mainwindow.h
     inc/readings_table.h
