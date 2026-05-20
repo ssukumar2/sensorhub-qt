@@ -61,3 +61,99 @@ void MainWindow::onSensorsReply(QNetworkReply* reply)
     
     reply->deleteLater();
 }
+// ---------------------------------------------------------------------
+// AppContext wiring (added by feature batch)
+// ---------------------------------------------------------------------
+#include "app_context.h"
+#include "http_client.h"
+#include "sensor_health.h"
+#include "notification_banner.h"
+#include "health_dock.h"
+#include "keyboard_shortcuts.h"
+#include "shortcuts_dialog.h"
+#include "theme_manager.h"
+
+#include <QStatusBar>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QActionGroup>
+
+void MainWindow::setAppContext(sensorhub::AppContext *ctx) {
+    m_appCtx = ctx;
+    if (!m_appCtx) return;
+
+    // Notification banner: parented to this window, shown above the
+    // central widget via the status bar's permanent slot until the
+    // central layout is refactored.
+    if (!m_banner) {
+        m_banner = new sensorhub::NotificationBanner(this);
+        statusBar()->addPermanentWidget(m_banner, /*stretch*/ 1);
+    }
+
+    // Health dock
+    if (!m_healthDock) {
+        m_healthDock = new sensorhub::HealthDock(m_appCtx->health(), this);
+        addDockWidget(Qt::RightDockWidgetArea, m_healthDock);
+        m_healthDock->hide();
+    }
+
+    // Keyboard shortcuts
+    if (!m_shortcuts) {
+        m_shortcuts = new sensorhub::KeyboardShortcuts(this);
+        m_shortcuts->bind(QStringLiteral("refresh"),
+                          tr("Refresh now"),
+                          QKeySequence(QStringLiteral("Ctrl+R")));
+        m_shortcuts->bind(QStringLiteral("toggle_health"),
+                          tr("Toggle Sensor Health dock"),
+                          QKeySequence(QStringLiteral("Ctrl+H")));
+        m_shortcuts->bind(QStringLiteral("show_shortcuts"),
+                          tr("Show keyboard shortcuts"),
+                          QKeySequence(QStringLiteral("F1")));
+        m_shortcuts->bind(QStringLiteral("toggle_theme"),
+                          tr("Toggle light/dark theme"),
+                          QKeySequence(QStringLiteral("Ctrl+T")));
+        connect(m_shortcuts, &sensorhub::KeyboardShortcuts::triggered,
+                this, &MainWindow::onShortcutTriggered);
+    }
+
+    // HealthMonitor signal hook-ups for the banner
+    auto *health = m_appCtx->health();
+    connect(health, &sensorhub::HealthMonitor::sensorWentStale,
+            this, &MainWindow::onSensorWentStale);
+    connect(health, &sensorhub::HealthMonitor::sensorRecovered,
+            this, &MainWindow::onSensorRecovered);
+}
+
+void MainWindow::onShortcutTriggered(const QString &id) {
+    if (!m_appCtx) return;
+    if (id == QLatin1String("refresh")) {
+        // No-op stub: existing auto-refresh timer in MainWindow drives
+        // periodic updates; manual refresh wiring is the next batch.
+        statusBar()->showMessage(tr("Refresh requested"), 1500);
+    } else if (id == QLatin1String("toggle_health") && m_healthDock) {
+        m_healthDock->setVisible(!m_healthDock->isVisible());
+    } else if (id == QLatin1String("show_shortcuts")) {
+        sensorhub::ShortcutsDialog dlg(m_shortcuts, this);
+        dlg.exec();
+    } else if (id == QLatin1String("toggle_theme")) {
+        auto *theme = m_appCtx->theme();
+        using T = sensorhub::ThemeManager;
+        theme->apply(theme->current() == T::Dark ? T::Light : T::Dark);
+        theme->persist();
+    }
+}
+
+void MainWindow::onSensorWentStale(const QString &id, const QString &name) {
+    if (m_banner) {
+        m_banner->post(tr("Sensor %1 (%2) is stale").arg(name, id),
+                       sensorhub::NotificationBanner::Warning);
+    }
+}
+
+void MainWindow::onSensorRecovered(const QString &id, const QString &name) {
+    if (m_banner) {
+        m_banner->post(tr("Sensor %1 (%2) recovered").arg(name, id),
+                       sensorhub::NotificationBanner::Info);
+    }
+}
