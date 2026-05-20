@@ -17,6 +17,7 @@ add_executable(sensorhub-monitor
     src/log_viewer.cpp
     src/chart_widget.cpp
     src/sensor_detail.cpp
+    src/app_context.cpp
     src/http_client.cpp
     src/sensor_health.cpp
     src/notification_banner.cpp
@@ -24,6 +25,7 @@ add_executable(sensorhub-monitor
     src/theme_manager.cpp
     src/keyboard_shortcuts.cpp
     src/shortcuts_dialog.cpp
+    inc/app_context.h
     inc/http_client.h
     inc/sensor_health.h
     inc/notification_banner.h
